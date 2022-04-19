@@ -4,6 +4,5 @@
   display: flex;
   overflow: hidden;
   flex-direction: column;
-  height: 361px;
   max-width: 282px;
 }

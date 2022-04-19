@@ -1,8 +1,11 @@
 .popup {
-  width: 100%;
+  width: 70vw;
   height: 100%;
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 2;
   display: none;
+  margin: auto;
+  max-width: 880px;
+  min-width: 320px;
 }

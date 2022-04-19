@@ -12,13 +12,23 @@
   <body class="page">
     <div class="popup">
       <div class="popup__container">
-        <p class="popup__title">Редактировать профиль</p>
-        <form>
-          <input class="popup__form" type="text" placeholder="Имя" />
-          <input class="popup__form" type="text" placeholder="Статус" />
+        <h3 class="popup__title">Редактировать профиль</h3>
+        <form class="popup__form" action="#" method="get">
+          <input
+            class="popup__input popup__input_type_name"
+            type="text"
+            name="popup-name"
+            placeholder="Имя"
+          />
+          <input
+            class="popup__input popup__input_type_status"
+            type="text"
+            name="popup-status"
+            placeholder="Статус"
+          />
+          <button class="popup__button-save" type="submit" aria-label="Сохранить">Сохранить</button>
         </form>
-        <button class="popup__button-save">Сохранить</button>
-        <button class="popup__button-close"></button>
+        <button class="popup__button-close" type="button" aria-label="Закрыть"></button>
       </div>
     </div>
     <header class="header">
@@ -31,56 +41,57 @@
           <h1 class="profile__title">Жак-Ив Кусто</h1>
           <h2 class="profile__subtitle">Исследователь океана</h2>
         </div>
-        <button class="profile__edit-button"></button>
-        <button class="profile__add-button"></button>
+        <button class="profile__edit-button" type="button" aria-label="Редактировать"></button>
+        <button class="profile__add-button" type="button" aria-label="Добавить"></button>
       </section>
       <section class="elements">
         <div class="element">
           <img class="element__image" src="./images/1.jpg" alt="Фото" />
           <div class="element__info">
-            <p class="element__text">Карачаевск</p>
+            <h3 class="element__text">Карачаевск</h3>
             <button class="element__like"></button>
           </div>
         </div>
         <div class="element">
           <img class="element__image" src="./images/2.jpg" alt="Фото" />
           <div class="element__info">
-            <p class="element__text">Гора Эльбрус</p>
+            <h3 class="element__text">Гора Эльбрус</h3>
             <button class="element__like"></button>
           </div>
         </div>
         <div class="element">
           <img class="element__image" src="./images/3.jpg" alt="Фото" />
           <div class="element__info">
-            <p class="element__text">Домбай</p>
+            <h3 class="element__text">Домбай</h3>
             <button class="element__like"></button>
           </div>
         </div>
         <div class="element">
           <img class="element__image" src="./images/4.jpg" alt="Фото" />
           <div class="element__info">
-            <p class="element__text">Гора Эльбрус</p>
+            <h3 class="element__text">Гора Эльбрус</h3>
             <button class="element__like"></button>
           </div>
         </div>
         <div class="element">
           <img class="element__image" src="./images/5.jpg" alt="Фото" />
           <div class="element__info">
-            <p class="element__text">Домбай</p>
+            <h3 class="element__text">Домбай</h3>
             <button class="element__like"></button>
           </div>
         </div>
         <div class="element">
           <img class="element__image" src="./images/6.jpg" alt="Фото" />
           <div class="element__info">
-            <p class="element__text">Карачаево-Черкеск</p>
+            <h3 class="element__text">Карачаево-Черкеск</h3>
             <button class="element__like"></button>
           </div>
         </div>
       </section>
-      <footer class="footer">
-        <p class="footer__copyright">© 2022 Mesto Russia</p>
-      </footer>
     </main>
+    <footer class="footer">
+      <p class="footer__copyright">© 2022 Mesto Russia</p>
+    </footer>
+    </body>
   </body>
 </html>

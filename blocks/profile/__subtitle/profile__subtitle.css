@@ -4,14 +4,18 @@
   color: white;
   font-size: 18px;
   display: block;
-  max-height: 18px;
   font-weight: 400;
   max-width: 300px;
   padding-bottom: 24px;
+  line-height: 22px;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 867px) {
   .profile__subtitle {
     padding-bottom: 1px;
+    line-height: 17px;
+    font-size: 14px;
+    line-height: 16.94px;
+    margin: 0 auto;
   }
 }

@@ -1,19 +1,4 @@
 .popup__form {
-  width: 358px;
-  height: 27px;
-  margin: 0 auto 30px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 1px 0;
-  border: 0;
-  display: block;
-  margin: 0 auto;
-}
-
-.popup__form:nth-child(2) {
-  margin: 30px auto 48px;
-}
-
-@media screen and (max-width: 767px) {
-  .popup__form {
-    width: 238px;
-  }
+  display: flex;
+  flex-direction: column;
 }

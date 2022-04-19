@@ -5,3 +5,10 @@
   max-width: 294px;
   flex-direction: column;
 }
+
+@media screen and (max-width: 867px) {
+  .profile__info {
+    padding: 27px 0 0 46px;
+    
+  }
+}

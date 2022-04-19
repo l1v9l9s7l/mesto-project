@@ -18,11 +18,11 @@
   }
 }
 
-@media  screen and (max-width: 767px) {
+@media  screen and (max-width: 867px) {
   .elements {
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(6, 1fr);
     max-width: 282px;
-    margin: 202px auto 0;
+    margin: 212px auto 0;
   }
 }

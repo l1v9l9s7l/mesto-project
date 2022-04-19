@@ -12,14 +12,15 @@
 }
 
 .profile__add-button:hover {
-  opacity: 0.5;
+  opacity: 0.25;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 867px) {
   
 .profile__add-button {
   position: relative;
-  background-image: url(../../../images/button_add+.png);
+  background-image: url(../../../images/button_add+.svg);
   width: 282px;
+  padding-bottom: 36px;
 }
 }
