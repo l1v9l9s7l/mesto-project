@@ -17,6 +17,7 @@
 @media screen and (max-width: 767px) {
   .popup__input {
     width: 238px;
+    padding: 0 0 8px 0;
   }
 
   .popup__input:nth-child(2) {
