@@ -11,10 +11,15 @@
 
   <body class="page">
     <!-- POPUP Profile -->
-    <div class="popup">
+    <div class="popup popup_type_profile">
       <div class="popup__container">
         <h3 class="popup__title">Редактировать профиль</h3>
-        <form class="popup__form" action="#" method="get" name="fields">
+        <form
+          class="popup__form popup__form_type_profile"
+          action="#"
+          method="get"
+          name="profile-fields"
+        >
           <input
             class="popup__input popup__input_type_name"
             type="text"
@@ -27,16 +32,31 @@
             name="popup-status"
             placeholder="Статус"
           />
-          <button class="popup__button-save" type="button" aria-label="Сохранить">Сохранить</button>
+          <button
+            class="popup__button-save popup__button-save_type_profile"
+            type="submit"
+            aria-label="Сохранить"
+          >
+            Сохранить
+          </button>
         </form>
-        <button class="popup__button-close" type="button" aria-label="Закрыть"></button>
+        <button
+          class="popup__button-close popup__button-close_type_profile"
+          type="button"
+          aria-label="Закрыть"
+        ></button>
       </div>
     </div>
     <!-- POPUP Photo -->
-    <div class="popup">
+    <div class="popup popup_type_photo">
       <div class="popup__container">
         <h3 class="popup__title">Новое место</h3>
-        <form class="popup__form" action="#" method="get" name="fields">
+        <form
+          class="popup__form popup__form_type_photo"
+          action="#"
+          method="get"
+          name="photo-fields"
+        >
           <input
             class="popup__input popup__input_type_picName"
             type="text"
@@ -49,15 +69,29 @@
             name="popup-status"
             placeholder="Ссылка на картинку"
           />
-          <button class="popup__button-save" type="submit" aria-label="Сохранить">Сохранить</button>
+          <button
+            class="popup__button-save popup__button-save_type_photo"
+            type="submit"
+            aria-label="Сохранить"
+          >
+            Сохранить
+          </button>
         </form>
-        <button class="popup__button-close" type="button" aria-label="Закрыть"></button>
+        <button
+          class="popup__button-close popup__button-close_type_photo"
+          type="button"
+          aria-label="Закрыть"
+        ></button>
       </div>
     </div>
     <!-- POPUP BigPicture -->
     <div class="popup popup_type_big-picture">
       <div class="popup__container popup__container_type_big-picture">
-        <button class="popup__button-close" type="button" aria-label="Закрыть"></button>
+        <button
+          class="popup__button-close popup__button-close_type_big-picture"
+          type="button"
+          aria-label="Закрыть"
+        ></button>
         <img class="popup__image" src="" alt="Фото" />
         <p class="popup__description"></p>
       </div>
