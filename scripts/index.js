@@ -28,30 +28,30 @@ const initialCards = [
 //page
 const page = document.querySelector('.page');
 //popups
-let popupProfile = page.querySelector('.popup_type_profile');
-let popupPhoto = page.querySelector('.popup_type_photo');
-let popupBigPicture = page.querySelector('.popup_type_big-picture');
+const popupProfile = page.querySelector('.popup_type_profile');
+const popupPhoto = page.querySelector('.popup_type_photo');
+const popupBigPicture = page.querySelector('.popup_type_big-picture');
 //Кнопки
-let editButton = page.querySelector('.profile__edit-button');
-let popupProfileCloseButton = page.querySelector('.popup__button-close_type_profile');
-let popupFormProfile = page.querySelector('.popup__form_type_profile');
-let addButton = page.querySelector('.profile__add-button');
-let popupPhotoCloseButton = page.querySelector('.popup__button-close_type_photo');
-let popupFormPhoto = page.querySelector('.popup__form_type_photo');
+const editButton = page.querySelector('.profile__edit-button');
+const popupProfileCloseButton = page.querySelector('.popup__button-close_type_profile');
+const popupFormProfile = page.querySelector('.popup__form_type_profile');
+const addButton = page.querySelector('.profile__add-button');
+const popupPhotoCloseButton = page.querySelector('.popup__button-close_type_photo');
+const popupFormPhoto = page.querySelector('.popup__form_type_photo');
 //inputs
-let profileInfo = page.querySelector('.profile__info');
+const profileInfo = page.querySelector('.profile__info');
 const profileName = document.querySelector('.popup__input_type_name');
 const profileStatus = document.querySelector('.popup__input_type_status');
 const picName = document.querySelector('.popup__input_type_picName');
 const picHref = document.querySelector('.popup__input_type_picHref');
 //profile
-let profileTitle = profileInfo.querySelector('.profile__title');
-let profileSubtitle = profileInfo.querySelector('.profile__subtitle');
+const profileTitle = profileInfo.querySelector('.profile__title');
+const profileSubtitle = profileInfo.querySelector('.profile__subtitle');
 //elements
 const elements = page.querySelector('.elements');
 //Темплейт
 const cardTemplate = document.querySelector('#card-template');
-let elementsContainer = page.querySelector('.elements');
+const elementsContainer = page.querySelector('.elements');
 const cardTemplateContent = document.querySelector('#card-template').content;
 const closePhoto = page.querySelector('.popup__button-close_type_big-picture');
 const bigPicturePhoto = popupBigPicture.querySelector('.popup__image');
@@ -60,19 +60,21 @@ const cardDescription = popupBigPicture.querySelector('.popup__description');
 //Открытие/закрытие попапов
 function openPopup(popup) {
   popup.classList.add('popup_opened');
-  profileName.value = profileTitle.innerHTML;
-  profileStatus.value = profileSubtitle.innerHTML;
 }
 function closePopup(popup) {
   popup.classList.remove('popup_opened');
 }
 
 addButton.addEventListener('click', () => openPopup(popupPhoto));
-editButton.addEventListener('click', () => openPopup(popupProfile));
+editButton.addEventListener('click', () => {
+profileName.value = profileTitle.textContent;
+profileStatus.value = profileSubtitle.textContent;
+openPopup(popupProfile);
+});
 popupProfileCloseButton.addEventListener('click', () => closePopup(popupProfile));
 popupPhotoCloseButton.addEventListener('click', () => closePopup(popupPhoto));
 closePhoto.addEventListener("click", () => {
-  popupBigPicture.classList.remove("popup_opened");
+  closePopup(popupBigPicture);
 });
 
 //Создание карточки и прослушка событий
@@ -85,15 +87,15 @@ function createCard(cardNameValue, cardImageValue) {
   cardImage.addEventListener("click", () => {
     bigPicturePhoto.src = cardImageValue;
     cardDescription.textContent = cardNameValue;
-    popupBigPicture.classList.add("popup_opened");
+    openPopup(popupBigPicture);
   });
   //Объявляю like, навешиваю слушатель события
-  let likeAdd = cardElement.querySelector(".element__like");
+  const likeAdd = cardElement.querySelector(".element__like");
   likeAdd.addEventListener('click', function(evt) {
     evt.target.classList.toggle('element__like_type_active');
   })
   //Удаление по нажатию button
-  let cardButtonDelete = cardElement.querySelector('.element__delete');
+  const cardButtonDelete = cardElement.querySelector('.element__delete');
   cardButtonDelete.addEventListener('click', function() {
     const card = cardButtonDelete.closest('.element');
     card.remove();
@@ -123,8 +125,8 @@ initialCards.forEach((item) => {
 //Изменение профиля
 function editProfile(profileTitleValue, profileSubtitleValue) {
   //Вписываю значения свойств из popup
-  let profileTitle = profileInfo.querySelector('.profile__title');
-  let profileSubtitle = profileInfo.querySelector('.profile__subtitle');
+  const profileTitle = profileInfo.querySelector('.profile__title');
+  const profileSubtitle = profileInfo.querySelector('.profile__subtitle');
   profileTitle.textContent = profileTitleValue;
   profileSubtitle.textContent = profileSubtitleValue ;
   return profileInfo;
