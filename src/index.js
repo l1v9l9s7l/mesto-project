@@ -1,3 +1,9 @@
+//import {enableValidation, } from './src/components/validate.js'
+import { openPopup, closePopup, page } from './components/modal.js';
+import { createCard, addCard } from './components/card.js';
+import { enableValidation, toggleButtonState } from './components/validate.js';
+
+
 //Карточки по умолчанию
 const initialCards = [
   {
@@ -26,24 +32,30 @@ const initialCards = [
   }
 ]
 //page
-const page = document.querySelector('.page');
+// const page = document.querySelector('.page');
 //popups
+const popup = page.querySelector('.popup')
 const popupProfile = page.querySelector('.popup_type_profile');
+const popupAvatar = page.querySelector('.popup_type_avatar');
 const popupPhoto = page.querySelector('.popup_type_photo');
 const popupBigPicture = page.querySelector('.popup_type_big-picture');
 //Кнопки
 const editButton = page.querySelector('.profile__edit-button');
 const popupProfileCloseButton = page.querySelector('.popup__button-close_type_profile');
+const popupAvatarCloseButton = page.querySelector('.popup__button-close_type_avatar');
 const popupFormProfile = page.querySelector('.popup__form_type_profile');
 const addButton = page.querySelector('.profile__add-button');
 const popupPhotoCloseButton = page.querySelector('.popup__button-close_type_photo');
 const popupFormPhoto = page.querySelector('.popup__form_type_photo');
+const avatar = page.querySelector('.profile__avatar')
+const savePhotoButton = document.querySelector('.popup__button-save_type_photo')
 //inputs
 const profileInfo = page.querySelector('.profile__info');
 const profileName = document.querySelector('.popup__input_type_name');
 const profileStatus = document.querySelector('.popup__input_type_status');
 const picName = document.querySelector('.popup__input_type_picName');
 const picHref = document.querySelector('.popup__input_type_picHref');
+const inputs = document.querySelectorAll('.popup__input');
 //profile
 const profileTitle = profileInfo.querySelector('.profile__title');
 const profileSubtitle = profileInfo.querySelector('.profile__subtitle');
@@ -58,14 +70,8 @@ const bigPicturePhoto = popupBigPicture.querySelector('.popup__image');
 const cardDescription = popupBigPicture.querySelector('.popup__description');
 
 //Открытие/закрытие попапов
-function openPopup(popup) {
-  popup.classList.add('popup_opened');
-}
-function closePopup(popup) {
-  popup.classList.remove('popup_opened');
-}
-
-addButton.addEventListener('click', () => openPopup(popupPhoto));
+addButton.addEventListener('click', () => {openPopup(popupPhoto); toggleButtonState(inputs, savePhotoButton)});
+avatar.addEventListener('click', () => openPopup(popupAvatar));
 editButton.addEventListener('click', () => {
 profileName.value = profileTitle.textContent;
 profileStatus.value = profileSubtitle.textContent;
@@ -73,45 +79,10 @@ openPopup(popupProfile);
 });
 popupProfileCloseButton.addEventListener('click', () => closePopup(popupProfile));
 popupPhotoCloseButton.addEventListener('click', () => closePopup(popupPhoto));
+popupAvatarCloseButton.addEventListener('click', () => closePopup(popupAvatar));
 closePhoto.addEventListener("click", () => {
   closePopup(popupBigPicture);
 });
-
-//Создание карточки и прослушка событий
-function createCard(cardNameValue, cardImageValue) {
-  const cardElement = cardTemplateContent.querySelector('.element').cloneNode(true);
-  const cardImage = cardElement.querySelector('.element__image');
-  cardElement.querySelector('.element__text').textContent = cardNameValue;
-  cardElement.querySelector('.element__image').src = cardImageValue;
-  //Открытие/закрытие фото
-  cardImage.addEventListener("click", () => {
-    bigPicturePhoto.src = cardImageValue;
-    cardDescription.textContent = cardNameValue;
-    openPopup(popupBigPicture);
-  });
-  //Объявляю like, навешиваю слушатель события
-  const likeAdd = cardElement.querySelector(".element__like");
-  likeAdd.addEventListener('click', function(evt) {
-    evt.target.classList.toggle('element__like_type_active');
-  })
-  //Удаление по нажатию button
-  const cardButtonDelete = cardElement.querySelector('.element__delete');
-  cardButtonDelete.addEventListener('click', function() {
-    const card = cardButtonDelete.closest('.element');
-    card.remove();
-  });
-  return cardElement;
-}
-
-//Добавление карточки
-function addCard(evt) {
-  evt.preventDefault();
-  const newCard = createCard(picName.value, picHref.value);
-  elementsContainer.prepend(newCard);
-  picName.value = '';
-  picHref.value = '';
-  closePopup(popupPhoto);
-};
 
 //Добавление карточки при срабатывании submit
 popupFormPhoto.addEventListener('submit', addCard);
@@ -140,3 +111,23 @@ popupFormProfile.addEventListener('submit', function(evt) {
   profileStatus.value = profileSubtitle.textContent;
   closePopup(popupProfile);
 })
+
+//Валидация
+enableValidation({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__submit',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__input-error_active'
+})
+
+export {
+  page,
+  popup,
+  cardTemplateContent,
+  picName,
+  picHref,
+  elementsContainer,
+  closePopup,
+}
+

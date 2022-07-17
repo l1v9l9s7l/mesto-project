@@ -8,6 +8,17 @@
   padding: 0 0 13px 0;
   font-size: 14px;
   line-height: 16.94px;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+  transition: 0.3s;
+  outline: none; 
+}
+
+.popup__input:focus {
+  border: 3px solid rgb(0, 123, 255);
+  border-radius: 2px;
 }
 
 .popup__input:nth-child(2) {
