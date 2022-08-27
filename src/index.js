@@ -88,11 +88,7 @@ closePhoto.addEventListener("click", () => {
 //Добавление карточки при срабатывании submit
 popupFormPhoto.addEventListener('submit', addCard);
 
-//Генерация из массива
-initialCards.forEach((item) => {
-  const newCard = createCard(item.name, item.link);
-  elements.append(newCard);
-})
+
 
 //Изменение профиля
 function editProfile(profileTitleValue, profileSubtitleValue) {
@@ -121,6 +117,35 @@ enableValidation({
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__input-error_active'
 })
+
+//Генерация из массива
+initialCards.forEach((item) => {
+  const newCard = createCard(item.name, item.link);
+  elements.append(newCard);
+})
+
+//Функция получения карточек с сервера и применение к ним createCard
+function getInitialCards() {
+  fetch('https://nomoreparties.co/v1/plus-cohort-14/cards', {
+    method: 'GET',
+    headers: {
+      authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d'
+    }
+  })
+    .then((res) => {
+    return res.json();
+  })
+  .then((cards) => {
+    cards.forEach((card) => {
+      const newCard = createCard(card.name, card.link);
+      elements.append(newCard);
+    });
+  });
+}
+
+getInitialCards();
+
+
 
 export {
   page,
