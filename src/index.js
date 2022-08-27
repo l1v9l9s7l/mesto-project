@@ -2,6 +2,7 @@
 import { openPopup, closePopup, page } from './components/modal.js';
 import { createCard, addCard } from './components/card.js';
 import { enableValidation, toggleButtonState } from './components/validate.js';
+import './pages/index.css';
 
 
 //Карточки по умолчанию
@@ -129,5 +130,12 @@ export {
   picHref,
   elementsContainer,
   closePopup,
+  bigPicturePhoto,
+  cardDescription,
+  openPopup,
+  popupProfile,
+  popupAvatar,
+  popupPhoto,
+  popupBigPicture,
 }
 

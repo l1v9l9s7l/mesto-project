@@ -1,7 +1,6 @@
+import { popupPhoto, popupProfile,popupAvatar, popupBigPicture } from "../index.js";
+
 const page = document.querySelector('.page');
-const popupPhoto = page.querySelector('.popup_type_photo');
-const popupProfile = page.querySelector('.popup_type_profile');
-const popupBigPicture = page.querySelector('.popup_type_big-picture');
 
 function openPopup(popup) {
   popup.classList.add('popup_opened');
@@ -16,6 +15,7 @@ function keyHandler(evt) {
     closePopup(popupPhoto);
     closePopup(popupProfile);
     closePopup(popupBigPicture);
+    closePopup(popupAvatar);
   }
 }
 
@@ -26,6 +26,7 @@ page.addEventListener('click', function(evt) {
     closePopup(popupPhoto);
     closePopup(popupProfile);
     closePopup(popupBigPicture);
+    closePopup(popupAvatar);
   }
 })
 

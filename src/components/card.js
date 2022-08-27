@@ -1,4 +1,4 @@
-import {cardTemplateContent, picName, picHref, elementsContainer, closePopup} from '../index.js'
+import {cardTemplateContent, picName, picHref, elementsContainer, closePopup, bigPicturePhoto, cardDescription, openPopup} from '../index.js'
 const page = document.querySelector('.page');
 const popupPhoto = page.querySelector('.popup_type_photo');
 const popupProfile = page.querySelector('.popup_type_profile');
