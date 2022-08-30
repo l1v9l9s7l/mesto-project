@@ -10,9 +10,11 @@ function createCard(cardNameValue, cardImageValue) {
   const cardImage = cardElement.querySelector('.element__image');
   cardElement.querySelector('.element__text').textContent = cardNameValue;
   cardElement.querySelector('.element__image').src = cardImageValue;
+  cardElement.querySelector('.element__image').alt = cardNameValue;
   //Открытие/закрытие фото
   cardImage.addEventListener("click", () => {
     bigPicturePhoto.src = cardImageValue;
+    bigPicturePhoto.alt = cardNameValue;
     cardDescription.textContent = cardNameValue;
     openPopup(popupBigPicture);
   });
@@ -35,9 +37,8 @@ function addCard(evt) {
   evt.preventDefault();
   const newCard = createCard(picName.value, picHref.value);
   elementsContainer.prepend(newCard);
-  picName.value = '';
-  picHref.value = '';
   closePopup(popupPhoto);
+  evt.target.reset() //Очистка полей формы
 };
 
 export {
