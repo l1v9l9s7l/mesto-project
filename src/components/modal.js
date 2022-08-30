@@ -4,31 +4,20 @@ const page = document.querySelector('.page');
 
 function openPopup(popup) {
   popup.classList.add('popup_opened');
+  page.addEventListener('keydown', closeByEsc) 
 }
 function closePopup(popup) {
   popup.classList.remove('popup_opened');
+  page.removeEventListener('keydown', closeByEsc) 
 }
 
-
-function keyHandler(evt) {
+//Функция закрытия по кнопке
+function closeByEsc(evt) {
   if (evt.key === 'Escape') {
-    closePopup(popupPhoto);
-    closePopup(popupProfile);
-    closePopup(popupBigPicture);
-    closePopup(popupAvatar);
+    const openedPopup = document.querySelector('.popup_opened');
+    closePopup(openedPopup);
   }
-}
-
-page.addEventListener('keydown', keyHandler) 
-
-page.addEventListener('click', function(evt) { 
-  if (evt.target.classList.contains('popup_opened')) {  
-    closePopup(popupPhoto);
-    closePopup(popupProfile);
-    closePopup(popupBigPicture);
-    closePopup(popupAvatar);
-  }
-})
+} 
 
 export {
   openPopup,

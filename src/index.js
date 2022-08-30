@@ -35,7 +35,8 @@ const initialCards = [
 //page
 // const page = document.querySelector('.page');
 //popups
-const popup = page.querySelector('.popup')
+const popup = page.querySelector('.popup');
+const popups = document.querySelectorAll('.popup');
 const popupProfile = page.querySelector('.popup_type_profile');
 const popupAvatar = page.querySelector('.popup_type_avatar');
 const popupPhoto = page.querySelector('.popup_type_photo');
@@ -71,18 +72,26 @@ const bigPicturePhoto = popupBigPicture.querySelector('.popup__image');
 const cardDescription = popupBigPicture.querySelector('.popup__description');
 
 //Открытие/закрытие попапов
-addButton.addEventListener('click', () => {openPopup(popupPhoto); toggleButtonState(inputs, savePhotoButton)});
+
+//Универсальное закрытие попапов
+popups.forEach((popup) => {
+  popup.addEventListener('mousedown', (evt) => {
+    if(evt.target.classList.contains('popup_opened')){
+      closePopup(popup)
+    };
+    if(evt.target.classList.contains('popup__button-close')){
+      closePopup(popup)
+    };
+  });
+})
+
+//Открытие попапов
+addButton.addEventListener('click', () => {openPopup(popupPhoto); toggleButtonState(inputs, savePhotoButton,validationSettings)});
 avatar.addEventListener('click', () => openPopup(popupAvatar));
 editButton.addEventListener('click', () => {
 profileName.value = profileTitle.textContent;
 profileStatus.value = profileSubtitle.textContent;
 openPopup(popupProfile);
-});
-popupProfileCloseButton.addEventListener('click', () => closePopup(popupProfile));
-popupPhotoCloseButton.addEventListener('click', () => closePopup(popupPhoto));
-popupAvatarCloseButton.addEventListener('click', () => closePopup(popupAvatar));
-closePhoto.addEventListener("click", () => {
-  closePopup(popupBigPicture);
 });
 
 //Добавление карточки при срабатывании submit
@@ -93,8 +102,6 @@ popupFormPhoto.addEventListener('submit', addCard);
 //Изменение профиля
 function editProfile(profileTitleValue, profileSubtitleValue) {
   //Вписываю значения свойств из popup
-  const profileTitle = profileInfo.querySelector('.profile__title');
-  const profileSubtitle = profileInfo.querySelector('.profile__subtitle');
   profileTitle.textContent = profileTitleValue;
   profileSubtitle.textContent = profileSubtitleValue ;
   return profileInfo;
@@ -109,14 +116,17 @@ popupFormProfile.addEventListener('submit', function(evt) {
   closePopup(popupProfile);
 })
 
-//Валидация
-enableValidation({
+const validationSettings = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__submit',
   inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__input-error_active'
-})
+  errorClass: 'popup__input-error_active',
+  inactiveButton:'popup__button-save_inactive'
+}
+
+//Валидация
+enableValidation(validationSettings)
 
 //Генерация из массива
 initialCards.forEach((item) => {
@@ -146,6 +156,25 @@ function getInitialCards() {
 getInitialCards();
 
 
+//Функция получения данных пользователя и вставки их в профиль
+function getUserInfo() {
+  fetch('https://nomoreparties.co/v1/plus-cohort-14/users/me', {
+    method: 'GET',
+    headers: {
+      authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d'
+    }
+  })
+    .then((res) => {
+    return res.json();
+  })
+  .then((user) => {
+      profileTitle.textContent = user.name;
+      profileSubtitle.textContent = user.about ;
+  });
+}
+
+getUserInfo();
+
 
 export {
   page,
@@ -162,5 +191,6 @@ export {
   popupAvatar,
   popupPhoto,
   popupBigPicture,
+  validationSettings
 }
 

@@ -1,3 +1,5 @@
+import {validationSettings} from '../index.js';
+
 const showInputError = (formElement, inputElement, errorMessage, settings) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.add(settings.inputErrorClass);
@@ -24,12 +26,12 @@ const setEventListeners = (formElement, settings) => {
   const inputList = Array.from(formElement.querySelectorAll(settings.inputSelector));
   const buttonElement = formElement.querySelector(settings.submitButtonSelector);
 
-  toggleButtonState(inputList, buttonElement);
+  toggleButtonState(inputList, buttonElement, validationSettings);
   
   inputList.forEach((inputElement) => {
     inputElement.addEventListener('input', function () {
       checkInputValidity(formElement, inputElement, settings);
-      toggleButtonState(inputList, buttonElement);
+      toggleButtonState(inputList, buttonElement, validationSettings);
     });
   });
 };
@@ -51,11 +53,13 @@ function hasInvalidInput(inputList) {
   });
 };
 
-function toggleButtonState(inputList, buttonElement) {
+function toggleButtonState(inputList, buttonElement, settings) {
   if (hasInvalidInput(inputList)) {
-  buttonElement.classList.add('popup__button-save_inactive');
+  buttonElement.classList.add(settings.inactiveButton);
+  buttonElement.setAttribute("disabled", true);
 } else {
-  buttonElement.classList.remove('popup__button-save_inactive');
+  buttonElement.classList.remove(settings.inactiveButton);
+  buttonElement.removeAttribute("disabled", true);
 } 
 }
 
