@@ -7,7 +7,7 @@ import './pages/index.css';
 
 //Карточки по умолчанию
 const initialCards = [
-  {
+  /*{
     name: 'Архыз',
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
   },
@@ -30,7 +30,7 @@ const initialCards = [
   {
     name: 'Байкал',
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
+  }*/
 ]
 //page
 // const page = document.querySelector('.page');
@@ -70,6 +70,7 @@ const cardTemplateContent = document.querySelector('#card-template').content;
 const closePhoto = page.querySelector('.popup__button-close_type_big-picture');
 const bigPicturePhoto = popupBigPicture.querySelector('.popup__image');
 const cardDescription = popupBigPicture.querySelector('.popup__description');
+let myId = '';
 
 //Открытие/закрытие попапов
 
@@ -99,13 +100,6 @@ popupFormPhoto.addEventListener('submit', addCard);
 
 
 
-//Изменение профиля
-function editProfile(profileTitleValue, profileSubtitleValue) {
-  //Вписываю значения свойств из popup
-  profileTitle.textContent = profileTitleValue;
-  profileSubtitle.textContent = profileSubtitleValue ;
-  return profileInfo;
-}
 
 //Прописываю работу кнопки сохранения профиля
 popupFormProfile.addEventListener('submit', function(evt) {
@@ -146,11 +140,12 @@ function getInitialCards() {
     return res.json();
   })
   .then((cards) => {
+    console.log(cards)
     cards.forEach((card) => {
-      const newCard = createCard(card.name, card.link);
+      const newCard = createCard(card.name, card.link, card.likes.length, card.owner['_id'], card['_id'], card['likes']);
       elements.append(newCard);
     });
-  });
+  })
 }
 
 getInitialCards();
@@ -170,10 +165,40 @@ function getUserInfo() {
   .then((user) => {
       profileTitle.textContent = user.name;
       profileSubtitle.textContent = user.about ;
-  });
+      myId = user['_id']
+      return myId;
+  })
 }
 
 getUserInfo();
+
+
+function patchUserInfo(nick, about) {
+  fetch('https://nomoreparties.co/v1/plus-cohort-14/users/me', {
+  method: 'PATCH',
+  headers: {
+    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    name: nick,
+    about: about
+  })
+})
+.then((res) => {
+  console.log(nick, about)
+  return res.json();
+})
+}
+
+//Изменение профиля
+function editProfile(profileTitleValue, profileSubtitleValue) {
+  //Вписываю значения свойств из popup
+  profileTitle.textContent = profileTitleValue;
+  profileSubtitle.textContent = profileSubtitleValue ;
+  patchUserInfo(profileTitle.textContent, profileSubtitle.textContent )
+  return profileInfo;
+}
 
 
 export {
@@ -191,6 +216,7 @@ export {
   popupAvatar,
   popupPhoto,
   popupBigPicture,
-  validationSettings
+  validationSettings,
+  myId
 }
 
