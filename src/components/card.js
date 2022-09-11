@@ -1,4 +1,4 @@
-import {cardTemplateContent, picName, picHref, elementsContainer, closePopup, bigPicturePhoto, cardDescription, openPopup, myId} from '../index.js'
+import {cardTemplateContent, picName, picHref, elementsContainer, closePopup, bigPicturePhoto, cardDescription, openPopup, myId,savePhotoButton,renderFormLoading} from '../index.js'
 const page = document.querySelector('.page');
 const popupPhoto = page.querySelector('.popup_type_photo');
 const popupProfile = page.querySelector('.popup_type_profile');
@@ -24,10 +24,16 @@ function createCard(cardNameValue, cardImageValue, likeNumber, cardOwner, cardId
   });
   //Объявляю like, навешиваю слушатель события
   const likeAdd = cardElement.querySelector(".element__like");
+
   likeAdd.addEventListener('click', function(evt) {
-    evt.target.classList.toggle('element__like_type_active');
+    if(evt.target.classList.contains('element__like_type_active')){
+      deleteLike(cardId)
+      evt.target.classList.remove('element__like_type_active');
+    } else
     putLike(cardId)
+    evt.target.classList.add('element__like_type_active');
   })
+
   //Удаление по нажатию button
   const cardButtonDelete = cardElement.querySelector('.element__delete');
   cardButtonDelete.addEventListener('click', function() {
@@ -39,14 +45,13 @@ function createCard(cardNameValue, cardImageValue, likeNumber, cardOwner, cardId
   if(myId !== cardOwner){
     cardButtonDelete.classList.add('element__delete_inactive')
   }
-  //Отображение ранее нажатого лайка
 
-  isLike.forEach(element => {
-    const likeId = element['_id'];
-    if (likeId === myId){
-      cardLike.classList.add('element__like_type_active')
-    };
-  });
+
+  //Отображение своего ранее нажатого лайка
+
+  if(isLike) {
+    cardLike.classList.add('element__like_type_active')
+  }
   
   return cardElement;
 }
@@ -66,14 +71,6 @@ function deleteCard(id){
 })
 }
 
-/*function getElementJSON(evt){
-  console.log(evt.target)
-}
-
-document.addEventListener('click', getElementJSON)*/
-
-
-
 // Запрос на добавление
 function postCard(name, link){
   fetch('https://nomoreparties.co/v1/plus-cohort-14/cards', {
@@ -92,18 +89,15 @@ function postCard(name, link){
 })
 }
 
-
-
 //Добавление карточки
 function addCard(evt) {
   evt.preventDefault();
+  renderFormLoading(true, savePhotoButton)
   const newCard = createCard(picName.value, picHref.value);
   elementsContainer.prepend(newCard);
   closePopup(popupPhoto);
   postCard(picName.value, picHref.value);
-
   evt.target.reset() //Очистка полей формы
-
 };
 
 //Запрос на лайк
@@ -113,9 +107,7 @@ function putLike(id){
   headers: {
     authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
     'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-  })
+  }
 })
 }
 
@@ -125,10 +117,25 @@ function deleteLike(id){
   headers: {
     authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
     'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-  })
+  }
 })
+}
+
+function uploadLike(id){
+  fetch(`https://nomoreparties.co/v1/plus-cohort-14/cards`, {
+  method: 'GET',
+  headers: {
+    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
+  }
+})
+  .then((res) => {
+    return res.json();
+  })
+  .then((cards) => {
+    cards.forEach((card) => {
+      console.log(card['likes'].length)
+    });
+  })
 }
 
 export {
