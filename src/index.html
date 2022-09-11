@@ -71,6 +71,7 @@
           action="#"
           method="get"
           name="profile-fields"
+          id="form-edit-avatar"
         >
           <input
             class="popup__input popup__input_type_href popup__input"
@@ -84,6 +85,7 @@
             class="popup__button-save popup__button-save_type_avatar popup__submit"
             type="submit"
             aria-label="Сохранить"
+            id="popup-save-button-avatar"
           >
             Сохранить
           </button>
@@ -164,7 +166,7 @@
       <section class="profile">
         <img class="profile__avatar" src="<%=require('./images/avatar.jpg')%>" alt="Аватар" />
         <div class="profile__info">
-          <h1 class="profile__title">Жак-Ив Кусто</h1>
+          <h1 class="profile__title">Жак-Ив Куст</h1>
           <h2 class="profile__subtitle">Океанолог</h2>
         </div>
         <button class="profile__edit-button" type="button" aria-label="Редактировать"></button>
@@ -182,7 +184,11 @@
         <button class="element__delete" type="button" aria-label="Удалить"></button>
         <div class="element__info">
           <h3 class="element__text"></h3>
-          <button class="element__like" type="button" aria-label="Лайк"></button>
+          <div class="element__like-wrapper">
+            <button class="element__like" type="button" aria-label="Лайк"></button>
+            <p class="element__like-number">0</p>
+            <p class="element__id"></p>
+          </div>
         </div>
       </div>
     </template>

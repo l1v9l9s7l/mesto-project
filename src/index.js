@@ -2,12 +2,13 @@
 import { openPopup, closePopup, page } from './components/modal.js';
 import { createCard, addCard } from './components/card.js';
 import { enableValidation, toggleButtonState } from './components/validate.js';
+import { getInitialCards, getUserInfo, patchUserInfo, changeAvatar } from './components/api.js';
 import './pages/index.css';
 
 
 //Карточки по умолчанию
 const initialCards = [
-  {
+  /*{
     name: 'Архыз',
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
   },
@@ -30,10 +31,9 @@ const initialCards = [
   {
     name: 'Байкал',
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
+  }*/
 ]
-//page
-// const page = document.querySelector('.page');
+
 //popups
 const popup = page.querySelector('.popup');
 const popups = document.querySelectorAll('.popup');
@@ -50,6 +50,8 @@ const addButton = page.querySelector('.profile__add-button');
 const popupPhotoCloseButton = page.querySelector('.popup__button-close_type_photo');
 const popupFormPhoto = page.querySelector('.popup__form_type_photo');
 const avatar = page.querySelector('.profile__avatar')
+const avatarSaveButton = document.querySelector('.popup__button-save_type_avatar');
+const profileSaveButton = document.querySelector('.popup__button-save_type_profile');
 const savePhotoButton = document.querySelector('.popup__button-save_type_photo')
 //inputs
 const profileInfo = page.querySelector('.profile__info');
@@ -58,9 +60,12 @@ const profileStatus = document.querySelector('.popup__input_type_status');
 const picName = document.querySelector('.popup__input_type_picName');
 const picHref = document.querySelector('.popup__input_type_picHref');
 const inputs = document.querySelectorAll('.popup__input');
+const avatarLink = document.querySelector('#avatar-input')
 //profile
 const profileTitle = profileInfo.querySelector('.profile__title');
 const profileSubtitle = profileInfo.querySelector('.profile__subtitle');
+//avatar
+const profileAvatarForm = document.querySelector('#form-edit-avatar');
 //elements
 const elements = page.querySelector('.elements');
 //Темплейт
@@ -70,7 +75,9 @@ const cardTemplateContent = document.querySelector('#card-template').content;
 const closePhoto = page.querySelector('.popup__button-close_type_big-picture');
 const bigPicturePhoto = popupBigPicture.querySelector('.popup__image');
 const cardDescription = popupBigPicture.querySelector('.popup__description');
-
+let myId = {
+  id: ''
+}
 //Открытие/закрытие попапов
 
 //Универсальное закрытие попапов
@@ -99,17 +106,11 @@ popupFormPhoto.addEventListener('submit', addCard);
 
 
 
-//Изменение профиля
-function editProfile(profileTitleValue, profileSubtitleValue) {
-  //Вписываю значения свойств из popup
-  profileTitle.textContent = profileTitleValue;
-  profileSubtitle.textContent = profileSubtitleValue ;
-  return profileInfo;
-}
 
 //Прописываю работу кнопки сохранения профиля
 popupFormProfile.addEventListener('submit', function(evt) {
   evt.preventDefault();
+  renderFormLoading(true, profileSaveButton)
   editProfile(profileName.value, profileStatus.value);
   profileName.value = profileTitle.textContent;
   profileStatus.value = profileSubtitle.textContent;
@@ -134,47 +135,39 @@ initialCards.forEach((item) => {
   elements.append(newCard);
 })
 
-//Функция получения карточек с сервера и применение к ним createCard
-function getInitialCards() {
-  fetch('https://nomoreparties.co/v1/plus-cohort-14/cards', {
-    method: 'GET',
-    headers: {
-      authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d'
-    }
-  })
-    .then((res) => {
-    return res.json();
-  })
-  .then((cards) => {
-    cards.forEach((card) => {
-      const newCard = createCard(card.name, card.link);
-      elements.append(newCard);
-    });
-  });
-}
-
 getInitialCards();
-
-
-//Функция получения данных пользователя и вставки их в профиль
-function getUserInfo() {
-  fetch('https://nomoreparties.co/v1/plus-cohort-14/users/me', {
-    method: 'GET',
-    headers: {
-      authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d'
-    }
-  })
-    .then((res) => {
-    return res.json();
-  })
-  .then((user) => {
-      profileTitle.textContent = user.name;
-      profileSubtitle.textContent = user.about ;
-  });
-}
 
 getUserInfo();
 
+//Изменение профиля
+function editProfile(profileTitleValue, profileSubtitleValue) {
+  //Вписываю значения свойств из popup
+  profileTitle.textContent = profileTitleValue;
+  profileSubtitle.textContent = profileSubtitleValue ;
+  patchUserInfo(profileTitle.textContent, profileSubtitle.textContent )
+  return profileInfo;
+}
+
+
+
+// Отображение загрузки
+function renderFormLoading(isLoading, submitButton){
+  if(isLoading) {
+    submitButton.textContent = 'Coхранение...'
+  } else {
+    submitButton.textContent = 'Сохранить'
+  }
+}
+
+const handleProfileAvatarSubmit = (evt) => {
+  renderFormLoading(true, avatarSaveButton)
+  evt.preventDefault();
+  changeAvatar(avatarLink.value)
+  avatar.src = avatarLink.value;
+  closePopup(popupAvatar)
+}
+
+profileAvatarForm.addEventListener("submit", handleProfileAvatarSubmit)
 
 export {
   page,
@@ -191,6 +184,13 @@ export {
   popupAvatar,
   popupPhoto,
   popupBigPicture,
-  validationSettings
+  validationSettings,
+  myId,
+  savePhotoButton,
+  renderFormLoading,
+  elements,
+  profileTitle,
+  profileSubtitle,
+  avatar
 }
 
