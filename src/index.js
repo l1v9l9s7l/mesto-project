@@ -1,3 +1,5 @@
+import './pages/index.css';
+
 //import {enableValidation, } from './src/components/validate.js'
 import { openPopup, closePopup, page } from './components/modal.js';
 import { createCard, addCard } from './components/card.js';
@@ -104,19 +106,6 @@ openPopup(popupProfile);
 //Добавление карточки при срабатывании submit
 popupFormPhoto.addEventListener('submit', addCard);
 
-
-
-
-//Прописываю работу кнопки сохранения профиля
-popupFormProfile.addEventListener('submit', function(evt) {
-  evt.preventDefault();
-  renderFormLoading(true, profileSaveButton)
-  editProfile(profileName.value, profileStatus.value);
-  profileName.value = profileTitle.textContent;
-  profileStatus.value = profileSubtitle.textContent;
-  closePopup(popupProfile);
-})
-
 const validationSettings = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
@@ -130,39 +119,70 @@ const validationSettings = {
 enableValidation(validationSettings)
 
 //Генерация из массива
-initialCards.forEach((item) => {
-  const newCard = createCard(item.name, item.link);
-  elements.append(newCard);
+Promise.all([getUserInfo(), getInitialCards()])
+  .then(([user, cards]) => {
+    avatar.src = user.avatar;
+    profileTitle.textContent = user.name;
+    profileSubtitle.textContent = user.about;
+    myId.id = user['_id']
+    cards.forEach((card) => {
+      const isLike = card.likes.some(like => like._id === myId.id);
+      const newCard = createCard(card.name, card.link, card.likes.length, card.owner['_id'], card['_id'], isLike);
+      elements.append(newCard);
+    });
+    return myId;
+  })
+  .catch(err => {
+    console.log(err);
+  });
+
+
+//Прописываю работу кнопки сохранения профиля
+popupFormProfile.addEventListener('submit', function(evt) {
+  evt.preventDefault();
+  editProfile(profileName.value, profileStatus.value)
+  profileName.value = profileTitle.textContent;
+  profileStatus.value = profileSubtitle.textContent;
+  closePopup(popupProfile);
 })
-
-getInitialCards();
-
-getUserInfo();
 
 //Изменение профиля
 function editProfile(profileTitleValue, profileSubtitleValue) {
   //Вписываю значения свойств из popup
   profileTitle.textContent = profileTitleValue;
   profileSubtitle.textContent = profileSubtitleValue ;
+  renderFormLoading(true, profileSaveButton, 'Сохранение...', 'Сохранить')
   patchUserInfo(profileTitle.textContent, profileSubtitle.textContent )
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  })
+  .finally(() => {
+    renderFormLoading(false, profileSaveButton, 'Сохранение...', 'Сохранить');
+  })
   return profileInfo;
 }
 
 
 
 // Отображение загрузки
-function renderFormLoading(isLoading, submitButton){
+function renderFormLoading(isLoading, submitButton, saving, save){
   if(isLoading) {
-    submitButton.textContent = 'Coхранение...'
+    submitButton.textContent = saving
   } else {
-    submitButton.textContent = 'Сохранить'
+    submitButton.textContent = save
   }
 }
 
 const handleProfileAvatarSubmit = (evt) => {
-  renderFormLoading(true, avatarSaveButton)
+  renderFormLoading(true, avatarSaveButton, 'Сохранение...', 'Сохранить')
   evt.preventDefault();
   changeAvatar(avatarLink.value)
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  })
+  .finally(() => {
+    renderFormLoading(false, avatarSaveButton, 'Сохранение...', 'Сохранить');
+  })
   avatar.src = avatarLink.value;
   closePopup(popupAvatar)
 }

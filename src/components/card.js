@@ -1,9 +1,37 @@
 import {cardTemplateContent, picName, picHref, elementsContainer, closePopup, bigPicturePhoto, cardDescription, openPopup, myId,savePhotoButton,renderFormLoading} from '../index.js'
+import {getInitialCards, deleteCard, postCard, putLike, deleteLike} from '../components/api.js'
 const page = document.querySelector('.page');
 const popupPhoto = page.querySelector('.popup_type_photo');
 const popupProfile = page.querySelector('.popup_type_profile');
 const popupBigPicture = page.querySelector('.popup_type_big-picture');
 
+function likeUpload(counter, number){
+  counter.textContent = number
+}
+
+function addLike(button, cardId){
+  button.addEventListener('click', function(evt) {
+    const card = evt.target.closest('.element');
+    let likeNum = card.querySelector('.element__like-number')
+    console.log(likeNum)
+    if(evt.target.classList.contains('element__like_type_active')){
+      deleteLike(cardId)
+      .then((res) => {
+        likeUpload(likeNum, res.likes.length)
+      console.log(res.likes.length)
+      return likeNum
+      })
+      evt.target.classList.remove('element__like_type_active');
+    } else
+    evt.target.classList.add('element__like_type_active');
+    putLike(cardId)
+    .then((res) => {
+      likeUpload(likeNum, res.likes.length)
+      console.log(res.likes.length)
+      return likeNum
+    })
+  })
+}
 
 //Создание карточки и прослушка событий
 function createCard(cardNameValue, cardImageValue, likeNumber, cardOwner, cardId, isLike) {
@@ -11,10 +39,12 @@ function createCard(cardNameValue, cardImageValue, likeNumber, cardOwner, cardId
   const cardImage = cardElement.querySelector('.element__image');
   const cardLike = cardElement.querySelector('.element__like');
   cardElement.querySelector('.element__text').textContent = cardNameValue;
-  cardElement.querySelector('.element__like-number').textContent = likeNumber;
+  let likeCounter = cardElement.querySelector('.element__like-number');
+  likeCounter.textContent = likeNumber;
   cardElement.querySelector('.element__image').src = cardImageValue;
   cardElement.querySelector('.element__image').alt = cardNameValue;
   cardElement.querySelector('.element__id').textContent = cardId;
+  
   //Открытие/закрытие фото
   cardImage.addEventListener("click", () => {
     bigPicturePhoto.src = cardImageValue;
@@ -22,17 +52,10 @@ function createCard(cardNameValue, cardImageValue, likeNumber, cardOwner, cardId
     cardDescription.textContent = cardNameValue;
     openPopup(popupBigPicture);
   });
+
   //Объявляю like, навешиваю слушатель события
   const likeAdd = cardElement.querySelector(".element__like");
-
-  likeAdd.addEventListener('click', function(evt) {
-    if(evt.target.classList.contains('element__like_type_active')){
-      deleteLike(cardId)
-      evt.target.classList.remove('element__like_type_active');
-    } else
-    putLike(cardId)
-    evt.target.classList.add('element__like_type_active');
-  })
+  addLike(likeAdd, cardId, likeCounter, likeNumber)
 
   //Удаление по нажатию button
   const cardButtonDelete = cardElement.querySelector('.element__delete');
@@ -41,14 +64,14 @@ function createCard(cardNameValue, cardImageValue, likeNumber, cardOwner, cardId
     deleteCard(cardId)
     card.remove();
   });
+
+
   //Деактивация кнопки удаления на чужих постах
-  if(myId !== cardOwner){
+  if(myId.id !== cardOwner){
     cardButtonDelete.classList.add('element__delete_inactive')
   }
 
-
   //Отображение своего ранее нажатого лайка
-
   if(isLike) {
     cardLike.classList.add('element__like_type_active')
   }
@@ -56,70 +79,27 @@ function createCard(cardNameValue, cardImageValue, likeNumber, cardOwner, cardId
   return cardElement;
 }
 
-
-//Запрос на удаление карточки
-function deleteCard(id){
-  fetch(`https://nomoreparties.co/v1/plus-cohort-14/cards/${id}`, {
-  method: 'DELETE',
-  headers: {
-    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
-    'Content-Type': 'application/json'
-  }
-})
-.then((res) => {
-  return res.json();
-})
-}
-
-// Запрос на добавление
-function postCard(name, link){
-  fetch('https://nomoreparties.co/v1/plus-cohort-14/cards', {
-  method: 'POST',
-  headers: {
-    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    name: name,
-    link: link
-  })
-})
-.then((res) => {
-  return res.json();
-})
-}
-
 //Добавление карточки
 function addCard(evt) {
   evt.preventDefault();
-  renderFormLoading(true, savePhotoButton)
-  const newCard = createCard(picName.value, picHref.value);
-  elementsContainer.prepend(newCard);
-  closePopup(popupPhoto);
-  postCard(picName.value, picHref.value);
-  evt.target.reset() //Очистка полей формы
+  renderFormLoading(true, savePhotoButton, 'Создание...', 'Создать')
+  postCard(picName.value, picHref.value)
+  .then((data) => {
+    const newCard = createCard(data.name, data.link, data.likes.length, data.owner._id, data._id, false);
+    return newCard
+  })
+  .then((res) => {
+    elementsContainer.prepend(res);
+    closePopup(popupPhoto);
+    evt.target.reset() //Очистка полей формы
+  })
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  })
+  .finally(() => {
+    renderFormLoading(false, savePhotoButton, 'Создание...', 'Создать');
+  })
 };
-
-//Запрос на лайк
-function putLike(id){
-  fetch(`https://nomoreparties.co/v1/plus-cohort-14/cards/likes/${id}`, {
-  method: 'PUT',
-  headers: {
-    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
-    'Content-Type': 'application/json'
-  }
-})
-}
-
-function deleteLike(id){
-  fetch(`https://nomoreparties.co/v1/plus-cohort-14/cards/likes/${id}`, {
-  method: 'DELETE',
-  headers: {
-    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
-    'Content-Type': 'application/json'
-  }
-})
-}
 
 function uploadLike(id){
   fetch(`https://nomoreparties.co/v1/plus-cohort-14/cards`, {
