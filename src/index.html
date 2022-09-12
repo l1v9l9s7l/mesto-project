@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mesto</title>
-    <link rel="stylesheet" href="./pages/index.css" />
+
     <link rel="shortcut icon" href="#" />
   </head>
 
@@ -75,12 +75,12 @@
         >
           <input
             class="popup__input popup__input_type_href popup__input"
-            type="text"
+            type="url"
             name="popup-profile-photo"
             placeholder="Ссылка"
             id="avatar-input"
           />
-          <span class="popup__input-error avatar-input-error"></span>
+          <span class="popup__input-error popup__input-error_type_avatar avatar-input-error"></span>
           <button
             class="popup__button-save popup__button-save_type_avatar popup__submit"
             type="submit"
@@ -134,9 +134,9 @@
           <button
             class="popup__button-save popup__button-save_type_photo popup__submit form__submit"
             type="submit"
-            aria-label="Сохранить"
+            aria-label="Создать"
           >
-            Сохранить
+            Создать
           </button>
         </form>
         <button
@@ -192,6 +192,5 @@
         </div>
       </div>
     </template>
-    <script type="module" src="./index.js"></script>
   </body>
 </html>

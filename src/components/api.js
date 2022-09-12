@@ -1,7 +1,3 @@
-
-import {myId,elements, profileTitle, profileSubtitle, avatar} from "../index.js";
-import {createCard} from "./card.js";
-
 const config = {
   baseURL: 'https://nomoreparties.co/v1/plus-cohort-14',
   headers: {
@@ -20,50 +16,24 @@ function checkRes(res) {
 
 //Функция получения карточек с сервера и применение к ним createCard
 function getInitialCards() {
-  fetch(`${config.baseURL}/cards`, {
+  return fetch(`${config.baseURL}/cards`, {
     method: 'GET',
     headers: config.headers
   })
-  .then((res) => {
-    return res.json();
-  })
-  .then((cards) => {
-    console.log(cards)
-    cards.forEach((card) => {
-      const isLike = card.likes.some(like => like._id === myId.id);
-      const newCard = createCard(card.name, card.link, card.likes.length, card.owner['_id'], card['_id'], isLike);
-      elements.append(newCard);
-    });
-  })
-  .catch((err) => {
-    console.log(err); // выводим ошибку в консоль
-  }); 
+  .then(checkRes)
 }
 
 //Функция получения данных пользователя и вставки их в профиль
 function getUserInfo() {
-  fetch(`${config.baseURL}/users/me`, {
+  return fetch(`${config.baseURL}/users/me`, {
     method: 'GET',
     headers: config.headers
   })
-  .then((res) => {
-    return res.json();
-  })
-  .then((user) => {
-      profileTitle.textContent = user.name;
-      profileSubtitle.textContent = user.about ;
-      avatar.src = user.avatar;
-      myId.id = user['_id']
-      console.log(user)
-      return myId;
-  })
-  .catch((err) => {
-    console.log(err); // выводим ошибку в консоль
-  }); 
+  .then(checkRes)
 }
 
 function patchUserInfo(nick, about) {
-  fetch(`${config.baseURL}/users/me`, {
+  return fetch(`${config.baseURL}/users/me`, {
   method: 'PATCH',
   headers: config.headers,
   body: JSON.stringify({
@@ -71,16 +41,11 @@ function patchUserInfo(nick, about) {
     about: about
   })
 })
-.then((res) => {
-  checkRes(res)
-})
-.catch((err) => {
-  console.log(err); // выводим ошибку в консоль
-}); 
+.then(res => checkRes(res))
 }
 
 function changeAvatar(avatar){
-  fetch(`${config.baseURL}/users/me/avatar`, {
+  return fetch(`${config.baseURL}/users/me/avatar`, {
   method: 'PATCH',
   headers: config.headers,
   body: JSON.stringify({
@@ -88,16 +53,67 @@ function changeAvatar(avatar){
   })
 })
 .then(res => checkRes(res))
-.catch((err) => {
-  console.log(err); // выводим ошибку в консоль
-}); 
 }
 
+//Запрос на удаление карточки
+function deleteCard(id){
+  fetch(`https://nomoreparties.co/v1/plus-cohort-14/cards/${id}`, {
+  method: 'DELETE',
+  headers: {
+    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
+    'Content-Type': 'application/json'
+  }
+})
+.then(res => checkRes(res))
+}
+
+// Запрос на добавление
+function postCard(name, link){
+  return fetch('https://nomoreparties.co/v1/plus-cohort-14/cards', {
+  method: 'POST',
+  headers: {
+    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    name: name,
+    link: link
+  })
+})
+.then(res => checkRes(res))
+}
+
+//Запрос на лайк
+function putLike(id){
+  return fetch(`https://nomoreparties.co/v1/plus-cohort-14/cards/likes/${id}`, {
+  method: 'PUT',
+  headers: {
+    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
+    'Content-Type': 'application/json'
+  }
+})
+.then(res => checkRes(res))
+}
+
+function deleteLike(id){
+  return fetch(`https://nomoreparties.co/v1/plus-cohort-14/cards/likes/${id}`, {
+  method: 'DELETE',
+  headers: {
+    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
+    'Content-Type': 'application/json'
+  }
+})
+.then(res => checkRes(res))
+}
 
 
 export{
   getInitialCards,
   getUserInfo,
   patchUserInfo,
-  changeAvatar
+  changeAvatar,
+  deleteCard,
+  postCard,
+  putLike,
+  deleteLike
 }
