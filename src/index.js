@@ -137,9 +137,9 @@ const handleProfileAvatarSubmit = (evt) => {
   renderFormLoading(true, avatarSaveButton, 'Сохранение...', 'Сохранить')
   evt.preventDefault();
   changeAvatar(avatarLink.value)
-  .then(() => { 
+  .then((res) => { 
     evt.target.reset()
-    avatar.src = avatarLink.value;
+    avatar.src = res.avatar
     closePopup(popupAvatar)
   })
   .catch((err) => {
