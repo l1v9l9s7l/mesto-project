@@ -5,39 +5,10 @@ import { openPopup, closePopup, page } from './components/modal.js';
 import { createCard, addCard } from './components/card.js';
 import { enableValidation, toggleButtonState } from './components/validate.js';
 import { getInitialCards, getUserInfo, patchUserInfo, changeAvatar } from './components/api.js';
+import {renderFormLoading} from './components/utils.js'
 import './pages/index.css';
 
-
-//Карточки по умолчанию
-const initialCards = [
-  /*{
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }*/
-]
-
 //popups
-const popup = page.querySelector('.popup');
 const popups = document.querySelectorAll('.popup');
 const popupProfile = page.querySelector('.popup_type_profile');
 const popupAvatar = page.querySelector('.popup_type_avatar');
@@ -52,6 +23,7 @@ const addButton = page.querySelector('.profile__add-button');
 const popupPhotoCloseButton = page.querySelector('.popup__button-close_type_photo');
 const popupFormPhoto = page.querySelector('.popup__form_type_photo');
 const avatar = page.querySelector('.profile__avatar')
+const editAvatarButton = page.querySelector('.profile__avatar-overlay')
 const avatarSaveButton = document.querySelector('.popup__button-save_type_avatar');
 const profileSaveButton = document.querySelector('.popup__button-save_type_profile');
 const savePhotoButton = document.querySelector('.popup__button-save_type_photo')
@@ -61,7 +33,7 @@ const profileName = document.querySelector('.popup__input_type_name');
 const profileStatus = document.querySelector('.popup__input_type_status');
 const picName = document.querySelector('.popup__input_type_picName');
 const picHref = document.querySelector('.popup__input_type_picHref');
-const inputs = document.querySelectorAll('.popup__input');
+const cardFormInputs = document.querySelectorAll('.popup__input');
 const avatarLink = document.querySelector('#avatar-input')
 //profile
 const profileTitle = profileInfo.querySelector('.profile__title');
@@ -77,7 +49,7 @@ const cardTemplateContent = document.querySelector('#card-template').content;
 const closePhoto = page.querySelector('.popup__button-close_type_big-picture');
 const bigPicturePhoto = popupBigPicture.querySelector('.popup__image');
 const cardDescription = popupBigPicture.querySelector('.popup__description');
-let myId = {
+const myId = {
   id: ''
 }
 //Открытие/закрытие попапов
@@ -95,12 +67,12 @@ popups.forEach((popup) => {
 })
 
 //Открытие попапов
-addButton.addEventListener('click', () => {openPopup(popupPhoto); toggleButtonState(inputs, savePhotoButton,validationSettings)});
-avatar.addEventListener('click', () => openPopup(popupAvatar));
+addButton.addEventListener('click', () => {openPopup(popupPhoto); toggleButtonState(cardFormInputs, savePhotoButton,validationSettings)});
+editAvatarButton.addEventListener('click', () => {openPopup(popupAvatar), toggleButtonState(cardFormInputs, avatarSaveButton,validationSettings)});
 editButton.addEventListener('click', () => {
-profileName.value = profileTitle.textContent;
-profileStatus.value = profileSubtitle.textContent;
-openPopup(popupProfile);
+  profileName.value = profileTitle.textContent;
+  profileStatus.value = profileSubtitle.textContent;
+  openPopup(popupProfile);
 });
 
 //Добавление карточки при срабатывании submit
@@ -136,23 +108,22 @@ Promise.all([getUserInfo(), getInitialCards()])
     console.log(err);
   });
 
-
 //Прописываю работу кнопки сохранения профиля
 popupFormProfile.addEventListener('submit', function(evt) {
   evt.preventDefault();
-  editProfile(profileName.value, profileStatus.value)
-  profileName.value = profileTitle.textContent;
-  profileStatus.value = profileSubtitle.textContent;
-  closePopup(popupProfile);
 })
 
 //Изменение профиля
 function editProfile(profileTitleValue, profileSubtitleValue) {
   //Вписываю значения свойств из popup
-  profileTitle.textContent = profileTitleValue;
-  profileSubtitle.textContent = profileSubtitleValue ;
   renderFormLoading(true, profileSaveButton, 'Сохранение...', 'Сохранить')
-  patchUserInfo(profileTitle.textContent, profileSubtitle.textContent )
+  patchUserInfo(profileTitleValue, profileSubtitleValue )
+  .then(()=>{
+    profileTitle.textContent = profileTitleValue;
+    profileSubtitle.textContent = profileSubtitleValue ;
+    editProfile(profileName.value, profileStatus.value);
+    closePopup(popupProfile);
+  })
   .catch((err) => {
     console.log(err); // выводим ошибку в консоль
   })
@@ -162,36 +133,26 @@ function editProfile(profileTitleValue, profileSubtitleValue) {
   return profileInfo;
 }
 
-
-
-// Отображение загрузки
-function renderFormLoading(isLoading, submitButton, saving, save){
-  if(isLoading) {
-    submitButton.textContent = saving
-  } else {
-    submitButton.textContent = save
-  }
-}
-
 const handleProfileAvatarSubmit = (evt) => {
   renderFormLoading(true, avatarSaveButton, 'Сохранение...', 'Сохранить')
   evt.preventDefault();
   changeAvatar(avatarLink.value)
+  .then(() => {
+    avatar.src = avatarLink.value;
+    closePopup(popupAvatar)
+  })
   .catch((err) => {
     console.log(err); // выводим ошибку в консоль
   })
   .finally(() => {
     renderFormLoading(false, avatarSaveButton, 'Сохранение...', 'Сохранить');
   })
-  avatar.src = avatarLink.value;
-  closePopup(popupAvatar)
 }
 
 profileAvatarForm.addEventListener("submit", handleProfileAvatarSubmit)
 
 export {
   page,
-  popup,
   cardTemplateContent,
   picName,
   picHref,
@@ -207,7 +168,6 @@ export {
   validationSettings,
   myId,
   savePhotoButton,
-  renderFormLoading,
   elements,
   profileTitle,
   profileSubtitle,

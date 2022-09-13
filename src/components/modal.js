@@ -1,5 +1,3 @@
-import { popupPhoto, popupProfile,popupAvatar, popupBigPicture } from "../index.js";
-
 const page = document.querySelector('.page');
 
 function openPopup(popup) {

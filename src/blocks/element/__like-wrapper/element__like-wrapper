@@ -1,0 +1,9 @@
+.element__like-wrapper{
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+  border: 0;
+  width: 22px;
+  justify-content: center;
+  align-items: center;
+}

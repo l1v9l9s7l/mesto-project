@@ -1,5 +1,3 @@
-import {validationSettings} from '../index.js';
-
 const showInputError = (formElement, inputElement, errorMessage, settings) => {
   const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.add(settings.inputErrorClass);
@@ -26,12 +24,12 @@ const setEventListeners = (formElement, settings) => {
   const inputList = Array.from(formElement.querySelectorAll(settings.inputSelector));
   const buttonElement = formElement.querySelector(settings.submitButtonSelector);
 
-  toggleButtonState(inputList, buttonElement, validationSettings);
+  toggleButtonState(inputList, buttonElement, settings);
   
   inputList.forEach((inputElement) => {
     inputElement.addEventListener('input', function () {
       checkInputValidity(formElement, inputElement, settings);
-      toggleButtonState(inputList, buttonElement, validationSettings);
+      toggleButtonState(inputList, buttonElement, settings);
     });
   });
 };
