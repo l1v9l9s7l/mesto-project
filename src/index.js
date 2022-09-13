@@ -111,6 +111,7 @@ Promise.all([getUserInfo(), getInitialCards()])
 //Прописываю работу кнопки сохранения профиля
 popupFormProfile.addEventListener('submit', function(evt) {
   evt.preventDefault();
+  editProfile(profileName.value, profileStatus.value);
 })
 
 //Изменение профиля
@@ -121,7 +122,6 @@ function editProfile(profileTitleValue, profileSubtitleValue) {
   .then(()=>{
     profileTitle.textContent = profileTitleValue;
     profileSubtitle.textContent = profileSubtitleValue ;
-    editProfile(profileName.value, profileStatus.value);
     closePopup(popupProfile);
   })
   .catch((err) => {
@@ -137,7 +137,8 @@ const handleProfileAvatarSubmit = (evt) => {
   renderFormLoading(true, avatarSaveButton, 'Сохранение...', 'Сохранить')
   evt.preventDefault();
   changeAvatar(avatarLink.value)
-  .then(() => {
+  .then(() => { 
+    evt.target.reset()
     avatar.src = avatarLink.value;
     closePopup(popupAvatar)
   })

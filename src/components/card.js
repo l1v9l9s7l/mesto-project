@@ -10,10 +10,9 @@ function uploadLike(counter, number){
   counter.textContent = number
 }
 
-function toggleLike(button, cardId){
+function toggleLike(button, cardId, likeNum){
   button.addEventListener('click', function(evt) {
     const card = evt.target.closest('.element');
-    const likeNum = card.querySelector('.element__like-number')
     console.log(likeNum)
     if(evt.target.classList.contains('element__like_type_active')){
       deleteLike(cardId)
@@ -21,7 +20,6 @@ function toggleLike(button, cardId){
         uploadLike(likeNum, res.likes.length)
       console.log(res.likes.length)
       evt.target.classList.remove('element__like_type_active');
-      return likeNum
       })
       .catch((err) => {
         console.log(err.message)
@@ -32,7 +30,6 @@ function toggleLike(button, cardId){
       uploadLike(likeNum, res.likes.length)
       evt.target.classList.add('element__like_type_active');
       console.log(res.likes.length)
-      return likeNum
     })
     .catch((err) => {
       console.log(err.message)
@@ -71,6 +68,9 @@ function createCard(cardNameValue, cardImageValue, likeNumber, cardOwner, cardId
     deleteCard(cardId)
     .then(() => {
       card.remove();
+    })
+    .catch((err) => {
+      console.log(err); // выводим ошибку в консоль
     })
   });
 
