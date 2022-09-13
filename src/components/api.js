@@ -57,24 +57,18 @@ function changeAvatar(avatar){
 
 //Запрос на удаление карточки
 function deleteCard(id){
-  fetch(`https://nomoreparties.co/v1/plus-cohort-14/cards/${id}`, {
+  return fetch(`${config.baseURL}/cards/${id}`, {
   method: 'DELETE',
-  headers: {
-    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
-    'Content-Type': 'application/json'
-  }
+  headers: config.headers
 })
 .then(res => checkRes(res))
 }
 
 // Запрос на добавление
 function postCard(name, link){
-  return fetch('https://nomoreparties.co/v1/plus-cohort-14/cards', {
+  return fetch(`${config.baseURL}/cards`, {
   method: 'POST',
-  headers: {
-    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
-    'Content-Type': 'application/json'
-  },
+  headers: config.headers,
   body: JSON.stringify({
     name: name,
     link: link
@@ -85,23 +79,17 @@ function postCard(name, link){
 
 //Запрос на лайк
 function putLike(id){
-  return fetch(`https://nomoreparties.co/v1/plus-cohort-14/cards/likes/${id}`, {
+  return fetch(`${config.baseURL}/cards/likes/${id}`, {
   method: 'PUT',
-  headers: {
-    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
-    'Content-Type': 'application/json'
-  }
+  headers: config.headers
 })
 .then(res => checkRes(res))
 }
 
 function deleteLike(id){
-  return fetch(`https://nomoreparties.co/v1/plus-cohort-14/cards/likes/${id}`, {
+  return fetch(`${config.baseURL}/cards/likes/${id}`, {
   method: 'DELETE',
-  headers: {
-    authorization: '54da0c89-ce48-4884-99bf-abf92ea9ad7d',
-    'Content-Type': 'application/json'
-  }
+  headers: config.headers
 })
 .then(res => checkRes(res))
 }

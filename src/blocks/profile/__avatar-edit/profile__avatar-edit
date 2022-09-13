@@ -1,0 +1,8 @@
+.profile__avatar-edit {
+  background-image: url(../../../images/pen.svg);
+  width: 26px;
+  height: 26px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}

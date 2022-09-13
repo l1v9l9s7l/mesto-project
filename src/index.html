@@ -164,7 +164,16 @@
     <main class="content">
       <!--Profile-->
       <section class="profile">
-        <img class="profile__avatar" src="<%=require('./images/avatar.jpg')%>" alt="Аватар" />
+        <div class="profile__avatar-wrapper">
+          <img class="profile__avatar" src="<%=require('./images/avatar.jpg')%>" alt="Аватар" />
+          <div class="profile__avatar-overlay">
+            <button
+              class="profile__avatar-edit"
+              type="button"
+              aria-label="изменить аватар"
+            ></button>
+          </div>
+        </div>
         <div class="profile__info">
           <h1 class="profile__title">Жак-Ив Куст</h1>
           <h2 class="profile__subtitle">Океанолог</h2>
